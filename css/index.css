@@ -1,0 +1,12 @@
+body {
+  background: #dedede;
+}
+.diceDiv {
+  float: left;
+}
+.left-padding-50{
+  padding-left: 25px;
+}
+.top-padding-100{
+  padding-top: 100px;
+}
