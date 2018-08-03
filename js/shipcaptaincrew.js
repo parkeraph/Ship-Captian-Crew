@@ -10,35 +10,13 @@ $(document).ready(function(){
 	
 	document.getElementById("turnDisplay").innerHTML = turn;
 	
-
-
-	//sort hand so we can iterate throught the hand from greatest to smallest
-	function sortHand(){
-		var i;
-		for (var i = hand.length-1; i >= 0; i--) {
-			for (var j=1; j<=i ; j++) {
-				if(hand[j-1]<hand[j]){
-					var temp = hand[j-1];
-					hand[j-1] = hand[j];
-					hand[j] = temp;
-				}
-			}
-		}
-
-		console.log("[");
-		for (var i = 0; i < hand.length; i++) {
-			console.log(hand[i]+",");
-		}
-		console.log("]")
-	}
-	
 	function drawDice(value, rand){
 		$("#dicePic"+ii).remove();
 		$("<object id='dicePic"+value+"' data='lib/dice_"+rand+".svg' type='image/svg+xml'><img width='50' src='lib/dice_"+rand+".svg'></object>").appendTo("#dice"+ii);
 	}
 	
 	function shuffleDice(){
-	  for(ii = 1; ii <= diceCount; ii++){
+	  for(ii = 1; ii < diceCount; ii++){
 			  curDice = document.getElementById("dice"+ii);
 			  randNum = Math.floor(Math.random() * 6);
 			
@@ -75,21 +53,23 @@ $(document).ready(function(){
 	
 	//parses hand looking for ship, captain and crew
 	function checkHand(){
-		sortHand();
+		hand.sort(function(a, b){return a-b});
 		score = 0;
-		for (var i = 0; i < hand.length; i++) {
+
+		//loop through each die in hand and determine arsenal and score
+		for (var i = hand.length-1; i >= 0; i--) {
 			//TODO: condense  logic
 			if(hand[i] === 6 && !ship){
 				ship = 1;
-				lockDice(hand[i]);
+				lockDice(i); i--; diceCount--;
 			}
-			if(hand[i] === 5 && ship && !captain){
-				captian = 1;
-				lockDice(hand[i]);
+			if(hand[i] === 5 && ship ===1){
+				captain = 1;
+				lockDice(i); i--; diceCount--;
 			}
-			if(hand[i] === 4 && ship && captain && !crew){
+			if(hand[i] === 4 && ship ===1 && captain ===1){
 				crew = 1;
-				lockDice(hand[i]);
+				lockDice(i); i--; diceCount--;
 			}
 			if (ship && captain && crew) {
 				score = score + hand[i]; 
